@@ -11,42 +11,37 @@
   <name>com.truong.common</name>
   <description>Application Layer for net.fres Engine</description>
 
-  
   <dependencies>
-	  	<dependency>
+		<dependency>
 			<groupId>com.truong</groupId>
 			<artifactId>com.truong.configuration</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
-		
 		<dependency>
-			<groupId>org.springframework.security.oauth.boot</groupId>
-			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
-			<version>2.0.1.RELEASE</version>
+	    	<groupId>org.springframework.boot</groupId>
+	    	<artifactId>spring-boot-starter-web</artifactId>
+	    </dependency>
+	    <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
 		</dependency>
 		
-	    
 		<dependency>
-		    <groupId>org.apache.httpcomponents</groupId>
-		    <artifactId>httpclient</artifactId>
+		    <groupId>org.apache.httpcomponents.client5</groupId>
+		    <artifactId>httpclient5</artifactId>
 		</dependency>
 
 		<dependency>
 		    <groupId>com.google.guava</groupId>
 		    <artifactId>guava</artifactId>
-		    <version>30.1-jre</version> <!-- Or the version you prefer -->
+		    <version>30.1-jre</version>
 		</dependency>
 		
-		
 		<dependency>
-    <groupId>javax.servlet</groupId>
-    <artifactId>javax.servlet-api</artifactId>
-    <version>4.0.1</version> <!-- Use the appropriate version -->
-    <scope>provided</scope>
-</dependency>
-
-
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<scope>provided</scope>
+			</dependency>
 	</dependencies>
 
 	<build>
@@ -54,8 +49,7 @@
 	        <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
-				<configuration>
+				<version>3.11.0</version> <configuration>
 					<source>${maven.compiler.source}</source>
 					<target>${maven.compiler.target}</target>
 				</configuration>

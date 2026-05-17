@@ -1,54 +1,5 @@
 package com.truong.oauth.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import com.google.common.base.Strings;
-import com.truong.common.exception.CustomException;
-import com.truong.entity.Employee;
-import com.truong.entity.CustomUser;
-import com.truong.service.EmployeeService;
-
 public class BaseController {
 	
-	@Autowired
-	private TokenStore tokenStore;
-	
-	@Autowired
-	EmployeeService employeeService;
-	
-	public Employee getUser() throws CustomException {
-		
-		String token = this.getRequestHeaderAccessToken();
-		
-		if (Strings.isNullOrEmpty(token)) {
-			throw new CustomException(HttpStatus.UNAUTHORIZED,  HttpStatus.UNAUTHORIZED.name());
-		}
-		
-		OAuth2Authentication oauth2 = tokenStore.readAuthentication(token);
-		CustomUser user = (CustomUser) oauth2.getPrincipal();
-		
-		Employee employee = employeeService.findOne(user.getId());
-		
-		if (employee == null) {
-			throw new CustomException(HttpStatus.UNAUTHORIZED,  HttpStatus.UNAUTHORIZED.name());
-		}
-		
-		return employee;
-	}
-	
-	public String getRequestHeaderAccessToken() {
-		return this.getRequest().getHeader("Authorization").replace("Bearer ", "");
-	}
-	
-	public HttpServletRequest getRequest() {
-		return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-	}
 }

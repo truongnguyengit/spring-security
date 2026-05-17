@@ -1,6 +1,6 @@
-/Users/nguyennhuttruong/Desktop/github/spring-secirity/com.truong.entity/src/main/java/com/truong/entity/BaseEntity.java
-/Users/nguyennhuttruong/Desktop/github/spring-secirity/com.truong.entity/src/main/java/com/truong/entity/custom/StoreProcedureStatusCodeEnum.java
-/Users/nguyennhuttruong/Desktop/github/spring-secirity/com.truong.entity/src/main/java/com/truong/entity/AuthoritiesJson.java
-/Users/nguyennhuttruong/Desktop/github/spring-secirity/com.truong.entity/src/main/java/com/truong/entity/Employee.java
-/Users/nguyennhuttruong/Desktop/github/spring-secirity/com.truong.entity/src/main/java/com/truong/entity/Post.java
-/Users/nguyennhuttruong/Desktop/github/spring-secirity/com.truong.entity/src/main/java/com/truong/entity/MediiUser.java
+/Users/nguyennhuttruong/Desktop/spring-security/com.truong.entity/src/main/java/com/truong/entity/CustomUser.java
+/Users/nguyennhuttruong/Desktop/spring-security/com.truong.entity/src/main/java/com/truong/entity/BaseEntity.java
+/Users/nguyennhuttruong/Desktop/spring-security/com.truong.entity/src/main/java/com/truong/entity/Employee.java
+/Users/nguyennhuttruong/Desktop/spring-security/com.truong.entity/src/main/java/com/truong/entity/Post.java
+/Users/nguyennhuttruong/Desktop/spring-security/com.truong.entity/src/main/java/com/truong/entity/AuthoritiesJson.java
+/Users/nguyennhuttruong/Desktop/spring-security/com.truong.entity/src/main/java/com/truong/entity/custom/StoreProcedureStatusCodeEnum.java

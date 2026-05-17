@@ -2,7 +2,6 @@ package com.truong.restapi.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,14 +21,23 @@ import com.truong.entity.Employee;
 import com.truong.entity.Post;
 import com.truong.restapi.request.PostRequest;
 import com.truong.restapi.response.PostResponse;
+import com.truong.service.EmployeeService;
 import com.truong.service.PostService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/v1/post")
+
 public class PostController extends BaseController {
 
-	@Autowired
-	PostService postService;
+	private final PostService postService;
+	private final EmployeeService employeeService;
+	
+	public PostController(PostService postService, EmployeeService employeeService) {
+		this.postService = postService;
+		this.employeeService = employeeService;
+	}
 
 	@PostMapping("create")
 	public ResponseEntity<BaseResponse<PostResponse>> create(@Valid @RequestBody PostRequest postRequest)
@@ -37,7 +45,7 @@ public class PostController extends BaseController {
 
 		BaseResponse<PostResponse> respponse = new BaseResponse<>();
 
-		Employee employee = this.getUser();
+		Employee employee = this.employeeService.getProfileOfCurrentUser();
 
 		if (employee == null) {
 			respponse.setStatus(HttpStatus.UNAUTHORIZED);
@@ -61,7 +69,7 @@ public class PostController extends BaseController {
 
 		BaseResponse<PostResponse> respponse = new BaseResponse<>();
 
-		Employee employee = this.getUser();
+		Employee employee = this.employeeService.getProfileOfCurrentUser();
 
 		if (employee == null) {
 			respponse.setStatus(HttpStatus.UNAUTHORIZED);
@@ -96,11 +104,7 @@ public class PostController extends BaseController {
 
 		BaseResponse<List<PostResponse>> respponse = new BaseResponse<>();
 
-		if (this.getUser() == null) {
-			respponse.setStatus(HttpStatus.UNAUTHORIZED);
-			respponse.setMessage(HttpStatus.UNAUTHORIZED);
-			return new ResponseEntity<>(respponse, HttpStatus.OK);
-		}
+
 
 		respponse.setData(new PostResponse().mapToList(postService.findAll(employeeId, status)));
 
@@ -114,11 +118,7 @@ public class PostController extends BaseController {
 
 		BaseResponse<PostResponse> respponse = new BaseResponse<>();
 
-		if (this.getUser() == null) {
-			respponse.setStatus(HttpStatus.UNAUTHORIZED);
-			respponse.setMessage(HttpStatus.UNAUTHORIZED);
-			return new ResponseEntity<>(respponse, HttpStatus.OK);
-		}
+
 
 		Post post = postService.findOne(id);
 

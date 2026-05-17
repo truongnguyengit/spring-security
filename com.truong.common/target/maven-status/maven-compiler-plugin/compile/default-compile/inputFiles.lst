@@ -1,6 +1,7 @@
-/Users/nguyennhuttruong/Desktop/github/spring-secirity/com.truong.common/src/main/java/com/truong/common/utils/BaseResponse.java
-/Users/nguyennhuttruong/Desktop/github/spring-secirity/com.truong.common/src/main/java/com/truong/common/utils/Utils.java
-/Users/nguyennhuttruong/Desktop/github/spring-secirity/com.truong.common/src/main/java/com/truong/common/utils/StringValue.java
-/Users/nguyennhuttruong/Desktop/github/spring-secirity/com.truong.common/src/main/java/com/truong/common/exception/GlobalExceptionHandler.java
-/Users/nguyennhuttruong/Desktop/github/spring-secirity/com.truong.common/src/main/java/com/truong/common/utils/HttpClientService.java
-/Users/nguyennhuttruong/Desktop/github/spring-secirity/com.truong.common/src/main/java/com/truong/common/exception/CustomException.java
+/Users/nguyennhuttruong/Desktop/spring-security/com.truong.common/src/main/java/com/truong/common/utils/BaseResponse.java
+/Users/nguyennhuttruong/Desktop/spring-security/com.truong.common/src/main/java/com/truong/common/utils/SecurityUtils.java
+/Users/nguyennhuttruong/Desktop/spring-security/com.truong.common/src/main/java/com/truong/common/exception/GlobalExceptionHandler.java
+/Users/nguyennhuttruong/Desktop/spring-security/com.truong.common/src/main/java/com/truong/common/utils/StringValue.java
+/Users/nguyennhuttruong/Desktop/spring-security/com.truong.common/src/main/java/com/truong/common/utils/Utils.java
+/Users/nguyennhuttruong/Desktop/spring-security/com.truong.common/src/main/java/com/truong/common/exception/CustomException.java
+/Users/nguyennhuttruong/Desktop/spring-security/com.truong.common/src/main/java/com/truong/common/utils/HttpClientService.java

@@ -6,11 +6,14 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.truong.common.exception.CustomException;
+import com.truong.common.utils.SecurityUtils;
 import com.truong.dao.EmployeeDao;
 import com.truong.entity.Employee;
 import com.truong.service.EmployeeService;
@@ -56,5 +59,14 @@ public class EmployeeServiceImpl implements EmployeeService{
 		
 		return dao.findAll();
 	}
+
+	@Override
+	public Employee getProfileOfCurrentUser() throws CustomException {
+		Integer userId = SecurityUtils.getCurrentUserId();
+        if (userId == null) {
+            throw new CustomException(HttpStatus.UNAUTHORIZED, "Chưa đăng nhập");
+        }
+        return dao.findOne(userId);
+    }
 
 }

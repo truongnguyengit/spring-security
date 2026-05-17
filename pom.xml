@@ -14,16 +14,14 @@
 
 	<properties>
 		<java.version>17</java.version>
-		<hibernate.version>5.3.7.Final</hibernate.version>
-		<jackson.library>2.9.8</jackson.library>
-		<maven.compiler.plugin.version>3.3.9</maven.compiler.plugin.version>
-		<maven.compiler.target>17</maven.compiler.target>
-		<maven.compiler.source>17</maven.compiler.source>
-		<spring-data-jpa.version>2.2.0.RELEASE</spring-data-jpa.version>
-		<spring-boot-maven-plugin.version>2.2.6.RELEASE</spring-boot-maven-plugin.version>
-		<spring.version>5.2.25.RELEASE</spring.version>
-		<spring-boot.version>2.7.14</spring-boot.version>
 		
+		<spring-boot.version>3.2.5</spring-boot.version>
+		
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<modules>
@@ -38,19 +36,24 @@
 		<module>com.truong.redis</module>
 	</modules>
 	
-	  <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring-boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			
+			<dependency>
+	            <groupId>org.apache.httpcomponents.client5</groupId>
+	            <artifactId>httpcomponents-client5</artifactId>
+	            <version>5.2.1</version>
+	        </dependency>
+		</dependencies>
+		
+		
+	</dependencyManagement>
 
 </project>
-

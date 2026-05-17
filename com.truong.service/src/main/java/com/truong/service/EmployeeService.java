@@ -3,9 +3,7 @@ package com.truong.service;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.truong.common.exception.CustomException;
 import com.truong.entity.Employee;
 
 public interface EmployeeService {
@@ -15,4 +13,6 @@ public interface EmployeeService {
 	Employee findByUsername(String username);
 	
 	List<Employee> findAll() throws SQLException;
+	
+	public Employee getProfileOfCurrentUser() throws CustomException;
 }

@@ -4,17 +4,18 @@ package com.truong.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
-import org.hibernate.Criteria;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.truong.dao.AbstractDao;
 import com.truong.dao.EmployeeDao;
 import com.truong.entity.Employee;
+
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 
 @Repository("employeeDao")

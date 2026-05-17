@@ -3,14 +3,13 @@ package com.truong.dao;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 
-import javax.persistence.criteria.CriteriaBuilder;
-
-import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.truong.entity.BaseEntity;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
 public abstract class AbstractDao<PK extends Serializable, T> {
 
 	private final Class<T> persistentClass;
@@ -21,13 +20,12 @@ public abstract class AbstractDao<PK extends Serializable, T> {
 				.getActualTypeArguments()[1];
 	}
 
-	@Autowired
-	private SessionFactory sessionFactory;
+	@PersistenceContext
+    private EntityManager entityManager;
 
 	protected Session getSession() {
 		
-		Session session = this.sessionFactory.getCurrentSession();
-		return session;
+		return entityManager.unwrap(Session.class);
 	}
 
 	protected CriteriaBuilder getBuilder() {
@@ -46,10 +44,6 @@ public abstract class AbstractDao<PK extends Serializable, T> {
 		getSession().delete(entity);
 	}
 
-	@SuppressWarnings("deprecation")
-	protected Criteria createEntityCriteria() {
-		return getSession().createCriteria(persistentClass);
-	}
 
 	public void update(BaseEntity entity) {
 		this.getSession().update(entity);

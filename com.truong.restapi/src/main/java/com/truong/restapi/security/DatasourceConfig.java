@@ -9,7 +9,6 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -17,8 +16,8 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.truong.configuration.ApplicationPropertieConfig;
@@ -26,11 +25,13 @@ import com.truong.restapi.config.ReplicationRoutingDataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import jakarta.annotation.PostConstruct;
+
 
 @Configuration
 @ComponentScan("com.truong")
 @EnableTransactionManagement
-@EnableAutoConfiguration(exclude=HibernateJpaAutoConfiguration.class)
+@EnableAutoConfiguration
 public class DatasourceConfig {
 
 	@Autowired
@@ -39,7 +40,7 @@ public class DatasourceConfig {
 	@Autowired
 	private Environment environment;
 
-	@Bean
+	@PostConstruct
 	void initSetting() {
 		System.out.println("=====Loading config=====");
 		System.out.println(String.format("Datasource master url: %s", config.getDatasourceMasterUrl()));
@@ -105,51 +106,53 @@ public class DatasourceConfig {
     DataSource dataSource() {
         return new LazyConnectionDataSourceProxy(routingDataSource());
     }
-
-	@Bean
-	public LocalSessionFactoryBean sessionFactory() {
-		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-		sessionFactory.setDataSource(dataSource());
-		sessionFactory.setPackagesToScan(new String[] { "com.truong.entity" });
-
-							// SpringSessionContext
-		sessionFactory.setHibernateProperties(hibernateProperties());
-
-		return sessionFactory;
-	}
-
+	
 	private Properties hibernateProperties() {
 		Properties properties = new Properties();
-		properties.put(org.hibernate.cfg.Environment.DIALECT, environment.getRequiredProperty("hibernate.dialect"));
-		properties.put(org.hibernate.cfg.Environment.SHOW_SQL, environment.getRequiredProperty("hibernate.show_sql"));
-		properties.put(org.hibernate.cfg.Environment.FORMAT_SQL,
-				environment.getRequiredProperty("hibernate.format_sql"));
-		properties.put(org.hibernate.cfg.Environment.CURRENT_SESSION_CONTEXT_CLASS,
-				environment.getRequiredProperty("hibernate.current_session_context_class"));
+		// Đồng bộ hóa các key cấu hình theo đúng chuẩn định dạng String của Hibernate
+		properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
+		properties.put("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
+		properties.put("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"));
+		properties.put("hibernate.current_session_context_class", environment.getRequiredProperty("hibernate.current_session_context_class"));
+		
+		// Thêm dòng này để Spring Data JPA quản lý Transaction đồng bộ với Hibernate cũ của bạn
+		properties.put("hibernate.transaction.coordinator_class", "jdbc"); 
 		return properties;
 	}
 
 	@Bean
-	public HibernateTransactionManager transactionManager(LocalSessionFactoryBean sessionFactory) {
-		HibernateTransactionManager transactionManager = new HibernateTransactionManager();
-		transactionManager.setSessionFactory(sessionFactory.getObject());
+	@Primary // Đánh dấu đây là EntityManager mặc định cho toàn bộ dự án
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+		LocalContainerEntityManagerFactoryBean em = 
+				new LocalContainerEntityManagerFactoryBean();
+		
+		// Gán Lazy Connection Proxy DataSource (đã bọc routing của bạn) vào đây
+		em.setDataSource(dataSource());
+		
+		// Quét các class @Entity của bạn
+		em.setPackagesToScan(new String[] { "com.truong.entity" });
+
+		// Cấu hình để JPA sử dụng Hibernate làm Engine xử lý ngầm
+		org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter vendorAdapter = 
+				new org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter();
+		em.setJpaVendorAdapter(vendorAdapter);
+
+		// Nạp các thuộc tính cấu hình Hibernate từ file properties của bạn vào
+		em.setJpaProperties(hibernateProperties());
+
+		return em;
+	}
+	
+	@Bean
+	@Primary
+	public JpaTransactionManager transactionManager(
+			LocalContainerEntityManagerFactoryBean entityManagerFactory) {
+		JpaTransactionManager transactionManager = 
+				new JpaTransactionManager();
+		
+		transactionManager.setEntityManagerFactory(entityManagerFactory.getObject());
 		return transactionManager;
 	}
-
-//	/*
-//	 * Scan entity để sử dụng JPA Nếu không sẽ gặp lỗi not an entity
-//	 */
-//	@Bean
-//	@Primary
-//	LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("dataSource") DataSource ds)
-//			throws PropertyVetoException {
-//		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
-//		entityManagerFactory.setDataSource(ds);
-//		entityManagerFactory.setPackagesToScan(new String[] { "com.truong.entity" });
-//		JpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
-//		entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter);
-//		return entityManagerFactory;
-//	}
 
 	private HikariConfig initHikariPoolingConfig(String poolName) {
 		HikariConfig hikariConfig = new HikariConfig();

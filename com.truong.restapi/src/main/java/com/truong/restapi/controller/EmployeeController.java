@@ -21,7 +21,7 @@ public class EmployeeController extends BaseController{
 		
 		BaseResponse<Object> response = new BaseResponse<>();
 		
-		this.getUser();
+
 		
 		response.setData(new EmployeeResponse().mapToList(employeeService.findAll()));
 		
