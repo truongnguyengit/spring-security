@@ -20,8 +20,10 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+import org.springframework.http.HttpStatus;
 
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPrivateKey;
@@ -66,6 +68,12 @@ public class AuthorizationServerConfiguration {
                             new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
                         )
                     )
+                .exceptionHandling(exceptions -> exceptions
+                	    .defaultAuthenticationEntryPointFor(
+                	        new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
+                	        new MediaTypeRequestMatcher(MediaType.APPLICATION_JSON)
+                	    )
+                	)
                 .formLogin(form -> form
                         .loginPage("/login") // Đường dẫn URL đến trang login đẹp của bạn
                         .permitAll()
@@ -78,7 +86,7 @@ public class AuthorizationServerConfiguration {
     }
 
     /*
-     * Nó lấy Khóa bí mật (Private Key) để ký vào phần chữ ký (Signature) của JWT.
+     * Nó lấy Khóa bí mật (Private Key) để ký vào phần chữ ký (Signature) của JWT. Signature = Encrypt(Hash(Header + Payload), PrivateKey)
      * 
      * Để các ứng dụng khác (Resource Server - ví dụ như API Gateway, Microservices backend) có thể xác thực được token do Authorization Server cấp ra, chúng cần có Khóa công khai (Public Key).
      * 
@@ -87,7 +95,7 @@ public class AuthorizationServerConfiguration {
 
 		Vế 1: Nó tự băm lại phần Header và Payload (đã bị sửa) đang có trong tay để ra một chuỗi mã MD5/SHA mới (gọi là Hash A).
 		
-		Vế 2: Nó dùng Khóa công khai để giải mã chuỗi Signature ở đuôi token nhằm lấy lại chuỗi băm gốc lúc chưa bị sửa (gọi là Hash B).
+		Vế 2: Nó dùng Khóa công khai để giải mã chuỗi Signature ở đuôi token nhằm lấy lại chuỗi băm gốc lúc chưa bị sửa (gọi là Hash B). Khi  dùng Public Key để "giải mã" Signature: Decrypt(Signature, PublicKey) -> Kết quả thu được KHÔNG PHẢI LÀ PAYLOAD, mà nó trả về chính là Hash(Header + Payload) gốc.
 		
 		So sánh: Nó so sánh Hash A == Hash B.
 		

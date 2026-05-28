@@ -42,6 +42,12 @@
 			<groupId>com.truong</groupId>
 			<artifactId>com.truong.common</artifactId>
 			<version>${project.version}</version> </dependency>
+			
+		<dependency>
+			<groupId>com.truong</groupId>
+			<artifactId>com.truong.media</artifactId>
+			<version>${project.version}</version> 
+		</dependency>
 		
 		<dependency>
             <groupId>org.springframework.boot</groupId>

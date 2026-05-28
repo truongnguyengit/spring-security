@@ -1,4 +1,4 @@
-com/truong/service/PostService.class
-com/truong/service/EmployeeService.class
 com/truong/service/impl/PostServiceImpl.class
 com/truong/service/impl/EmployeeServiceImpl.class
+com/truong/service/PostService.class
+com/truong/service/EmployeeService.class
