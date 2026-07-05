@@ -1,0 +1,26 @@
+@Library('pipeline-groovy-lib')_
+
+def serviceEnum = 9001
+def serviceInfo
+def gitCommitInfo
+
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') { steps { checkout scm } }
+        stage('Load service metadata') {
+            steps {
+                script {
+                    serviceInfo = getServiceInfo(serviceEnum, null)
+                }
+            }
+        }
+        stage('Validate config') { steps { script { validateServiceConfig(serviceInfo) } } }
+        stage('Git info') { steps { script { gitCommitInfo = getGitCommitInfo() } } }
+        stage('Build image') { steps { script { buildDockerImage(serviceInfo) } } }
+        stage('Deploy') { steps { script { deployService(serviceInfo) } } }
+    }
+    post {
+
+    }
+}
