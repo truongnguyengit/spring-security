@@ -20,7 +20,4 @@ pipeline {
         stage('Build image') { steps { script { buildDockerImage(serviceInfo) } } }
         stage('Deploy') { steps { script { deployService(serviceInfo) } } }
     }
-    post {
-
-    }
 }
